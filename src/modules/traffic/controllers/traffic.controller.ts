@@ -2,12 +2,36 @@ import { Controller, Post, Body, HttpException, HttpStatus } from '@nestjs/commo
 import { TrafficService } from '../services/traffic.service';
 import { TrafficRequestDto } from '../dtos/traffic-request.dto';
 import { TrafficData, TrafficStatus } from '../interfaces/traffic.interface';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { TrafficResponseDto } from '../dtos/traffic-response.dto';
 
-@Controller('traffic')
+@ApiTags('Traffic')
+@Controller({
+  path: 'traffic',
+  version: '1'
+})
 export class TrafficController {
   constructor(private readonly trafficService: TrafficService) {}
 
   @Post('check')
+  @ApiOperation({ summary: 'Check traffic conditions between two locations' })
+  @ApiResponse({
+    status: 201,
+    description: 'Traffic data retrieved successfully',
+    type: TrafficResponseDto,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Invalid address provided',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Route not found between the provided locations',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal server error',
+  })
   async checkTraffic(@Body() trafficRequest: TrafficRequestDto): Promise<TrafficData> {
     try {
       const trafficData = await this.trafficService.getTrafficData(
