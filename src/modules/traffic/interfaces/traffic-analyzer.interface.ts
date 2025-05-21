@@ -15,4 +15,11 @@ export interface TrafficAnalyzerInterface {
    * @returns Traffic status
    */
   determineTrafficStatus(delay: number): TrafficStatus;
+
+  /**
+   * Checks if the delay exceeds the configured threshold
+   * @param delay - Delay in minutes
+   * @returns boolean indicating if notification should be sent
+   */
+  shouldSendNotification(delay: number): boolean;
 } 

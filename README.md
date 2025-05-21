@@ -15,18 +15,21 @@ The system implements the following core requirements:
 
 2. **Delay Analysis**
    - Automatic delay calculation
-   - Threshold-based notification triggering
-   - Delay severity assessment
+   - Configurable threshold-based notification triggering
+   - Delay severity assessment based on threshold
+   - Dynamic notification rules
 
 3. **Message Generation**
    - AI-powered message customization
    - Context-aware notification content
    - Professional and friendly tone
+   - Only generates messages for significant delays
 
 4. **Notification Delivery**
    - Automated email sending
    - Customer contact management
    - Delivery confirmation
+   - Threshold-based delivery control
 
 ## Project Requirements
 
@@ -50,7 +53,7 @@ The system implements the following core requirements:
 ### Workflow Steps
 
 1. Traffic data fetching and delay calculation
-2. Threshold-based notification triggering (30-minute default)
+2. Threshold-based notification triggering (configurable via environment)
 3. AI message generation for significant delays
 4. Customer notification delivery
 
@@ -66,10 +69,18 @@ $ cp .env.example .env
 
 Required environment variables:
 ```
+# Google Maps API
 GOOGLE_MAPS_API_KEY=your_google_maps_api_key
+
+# OpenAI API
 OPENAI_API_KEY=your_openai_api_key
+
+# SendGrid API
 SENDGRID_API_KEY=your_sendgrid_api_key
 SENDGRID_FROM_EMAIL=your_verified_sender_email
+
+# Traffic Configuration
+DELAY_THRESHOLD_MINUTES=30  # Minimum delay in minutes to trigger notifications
 ```
 
 Configure mock customer email list
@@ -115,7 +126,7 @@ Response:
     "delay": 15,
     "distance": 10.5
   },
-  "notificationMessage": "Friendly notification message about the delay"
+  "notificationMessage": "Friendly notification message about the delay (only included if delay exceeds threshold)"
 }
 ```
 
@@ -131,3 +142,15 @@ src/
 └── config/             # Configuration files
 └── temporal/             # Temporal
 ```
+
+## Delay Threshold Configuration
+
+The system uses a configurable delay threshold to determine when to send notifications:
+
+- The threshold is set via the `DELAY_THRESHOLD_MINUTES` environment variable
+- Default value is 30 minutes if not configured
+- Notifications are only sent when the delay exceeds or equals the threshold
+- Traffic status is determined based on the threshold:
+  - NORMAL: No delay
+  - DELAYED: Delay less than threshold
+  - HEAVY_DELAY: Delay greater than or equal to threshold
