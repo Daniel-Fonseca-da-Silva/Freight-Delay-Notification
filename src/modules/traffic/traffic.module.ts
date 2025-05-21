@@ -5,11 +5,12 @@ import { RouteCalculatorService } from './services/route-calculator.service';
 import { TrafficAnalyzerService } from './services/traffic-analyzer.service';
 import { TrafficConfig } from './config/traffic.config';
 import { TrafficController } from './controllers/traffic.controller';
+import { AiModule } from '../ai/ai.module';
 
 // Register the service and its dependencies
 // Export the service to be used in other modules
 @Module({
-  imports: [ConfigModule],
+  imports: [ConfigModule, AiModule],
   controllers: [TrafficController],
   providers: [
     TrafficService,

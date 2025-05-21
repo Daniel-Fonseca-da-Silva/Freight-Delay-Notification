@@ -3,7 +3,8 @@ import { TrafficService } from '../services/traffic.service';
 import { TrafficRequestDto } from '../dtos/traffic-request.dto';
 import { TrafficData, TrafficStatus } from '../interfaces/traffic.interface';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { TrafficResponseDto } from '../dtos/traffic-response.dto';
+import { TrafficNotificationResponseDto } from '../dtos/traffic-notification-response.dto';
+import { AiService } from '../../ai/services/ai.service';
 
 @ApiTags('Traffic')
 @Controller({
@@ -11,14 +12,17 @@ import { TrafficResponseDto } from '../dtos/traffic-response.dto';
   version: '1'
 })
 export class TrafficController {
-  constructor(private readonly trafficService: TrafficService) {}
+  constructor(
+    private readonly trafficService: TrafficService,
+    private readonly aiService: AiService,
+  ) {}
 
   @Post('check')
-  @ApiOperation({ summary: 'Check traffic conditions between two locations' })
+  @ApiOperation({ summary: 'Check traffic conditions between two locations and send notification' })
   @ApiResponse({
     status: 201,
-    description: 'Traffic data retrieved successfully',
-    type: TrafficResponseDto,
+    description: 'Traffic data retrieved and notification sent successfully',
+    type: TrafficNotificationResponseDto,
   })
   @ApiResponse({
     status: 400,
@@ -32,7 +36,7 @@ export class TrafficController {
     status: 500,
     description: 'Internal server error',
   })
-  async checkTraffic(@Body() trafficRequest: TrafficRequestDto): Promise<TrafficData> {
+  async checkTraffic(@Body() trafficRequest: TrafficRequestDto): Promise<TrafficNotificationResponseDto> {
     try {
       const trafficData = await this.trafficService.getTrafficData(
         trafficRequest.origin,
@@ -50,7 +54,13 @@ export class TrafficController {
         );
       }
 
-      return trafficData;
+      // Generate and send notification
+      const notificationMessage = await this.aiService.generateFriendlyMessage(trafficData);
+
+      return {
+        trafficData,
+        notificationMessage,
+      };
     } catch (error) {
       if (error instanceof HttpException) {
         throw error;

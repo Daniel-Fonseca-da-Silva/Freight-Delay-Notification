@@ -1,40 +1,32 @@
 # Freight Delay Notification System
 
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
-
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
-
 ## Description
 
-A TypeScript application built with NestJS to monitor traffic delays on freight delivery routes and notify customers when significant delays occur. This system uses Temporal for workflow management and integrates with various APIs to provide real-time delay notifications.
+This repository is for the exercise of Freight Delay Notification System where we worked with google maps, sendgrid, chatgpt, swagger and temporal.
 
-## Features
+## Core Requirements
 
-- Traffic condition monitoring for delivery routes
-- Delay calculation and threshold-based notifications
-- AI-powered message generation for personalized notifications
-- Email/SMS notification delivery
-- Robust error handling and logging
-- Temporal workflow management
+The system implements the following core requirements:
+
+1. **Traffic Monitoring**
+   - Real-time traffic condition checking
+   - Route analysis between origin and destination
+   - Current vs. normal travel time comparison
+
+2. **Delay Analysis**
+   - Automatic delay calculation
+   - Threshold-based notification triggering
+   - Delay severity assessment
+
+3. **Message Generation**
+   - AI-powered message customization
+   - Context-aware notification content
+   - Professional and friendly tone
+
+4. **Notification Delivery**
+   - Automated email sending
+   - Customer contact management
+   - Delivery confirmation
 
 ## Project Requirements
 
@@ -62,13 +54,6 @@ A TypeScript application built with NestJS to monitor traffic delays on freight 
 3. AI message generation for significant delays
 4. Customer notification delivery
 
-### Error Handling
-
-- Comprehensive API error handling
-- Fallback mechanisms for failed API calls
-- Detailed logging system
-- Graceful degradation
-
 ## Project Setup
 
 ```bash
@@ -80,10 +65,17 @@ $ cp .env.example .env
 ```
 
 Required environment variables:
-- Traffic API credentials
-- OpenAI API key
-- Notification service credentials
-- Temporal configuration
+```
+GOOGLE_MAPS_API_KEY=your_google_maps_api_key
+OPENAI_API_KEY=your_openai_api_key
+SENDGRID_API_KEY=your_sendgrid_api_key
+SENDGRID_FROM_EMAIL=your_verified_sender_email
+```
+
+Configure mock customer email list
+```
+Add the mock customer email to receive notifications in ./config/customers.txt
+```
 
 ## Development
 
@@ -98,85 +90,44 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
-## Testing
+## API Endpoints
 
-```bash
-# unit tests
-$ npm run test
+### Check Traffic and Send Notification
+```http
+POST /v1/traffic/check
+```
 
-# e2e tests
-$ npm run test:e2e
+Request body:
+```json
+{
+  "origin": "Starting address",
+  "destination": "Destination address"
+}
+```
 
-# test coverage
-$ npm run test:cov
+Response:
+```json
+{
+  "trafficData": {
+    "status": "HEAVY_DELAY",
+    "currentDuration": 45,
+    "normalDuration": 30,
+    "delay": 15,
+    "distance": 10.5
+  },
+  "notificationMessage": "Friendly notification message about the delay"
+}
 ```
 
 ## Project Structure
 
 ```
 src/
-├── workflows/          # Temporal workflow definitions
-├── activities/         # Workflow activities
-├── services/          # Business logic services
-├── interfaces/        # TypeScript interfaces
-├── config/           # Configuration files
-└── utils/            # Utility functions
+├── modules/
+│   ├── traffic/          # Traffic monitoring and delay calculation
+│   ├── ai/              # AI message generation
+│   └── email/           # Email notification service
+├── shared/              # Shared utilities and interfaces
+└── config/             # Configuration files
+└── temporal/             # Temporal
 ```
-
-## Error Handling Strategy
-
-The system implements a comprehensive error handling strategy:
-- API response validation
-- Retry mechanisms for transient failures
-- Fallback messages for AI generation failures
-- Detailed error logging
-- Graceful degradation paths
-
-## Documentation
-
-Each component includes detailed documentation:
-- Purpose and functionality
-- Required parameters
-- Error scenarios
-- Integration points
-- Configuration options
-
-## Support
-
-For support and questions, please open an issue in the repository.
-
-## License
-
-This project is [MIT licensed](LICENSE).
-
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
-
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
