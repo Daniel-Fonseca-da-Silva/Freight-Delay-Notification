@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import OpenAI from 'openai';
+import { OpenAI } from 'openai';
 import { TrafficData } from '../interfaces/traffic-data.interface';
 import { logger } from '../../../shared/utils/logger';
 import { EmailService } from '../../email/services/email.service';
