@@ -88,6 +88,16 @@ Configure mock customer email list
 Add the mock customer email to receive notifications in ./config/customers.txt
 ```
 
+### Verifying the Container
+
+```bash
+# Check container logs
+$ docker logs freight-delay-notification
+
+# Check container status
+$ docker ps
+```
+
 ## Development
 
 ```bash
