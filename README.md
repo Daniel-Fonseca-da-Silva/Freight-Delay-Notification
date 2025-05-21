@@ -1,3 +1,5 @@
+# Freight Delay Notification System
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>
@@ -23,15 +25,67 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+A TypeScript application built with NestJS to monitor traffic delays on freight delivery routes and notify customers when significant delays occur. This system uses Temporal for workflow management and integrates with various APIs to provide real-time delay notifications.
 
-## Project setup
+## Features
+
+- Traffic condition monitoring for delivery routes
+- Delay calculation and threshold-based notifications
+- AI-powered message generation for personalized notifications
+- Email/SMS notification delivery
+- Robust error handling and logging
+- Temporal workflow management
+
+## Project Requirements
+
+### API Integrations
+
+1. **Traffic Data API**
+   - Integration with traffic APIs (Google Maps/Mapbox)
+   - Route traffic condition monitoring
+   - Delay time calculation
+
+2. **AI Message Generation API**
+   - OpenAI GPT-4 integration
+   - Customized delay notification messages
+   - Fallback message system
+
+3. **Notification API**
+   - Email/SMS delivery (SendGrid/Twilio)
+   - Notification status tracking
+   - Delivery confirmation
+
+### Workflow Steps
+
+1. Traffic data fetching and delay calculation
+2. Threshold-based notification triggering (30-minute default)
+3. AI message generation for significant delays
+4. Customer notification delivery
+
+### Error Handling
+
+- Comprehensive API error handling
+- Fallback mechanisms for failed API calls
+- Detailed logging system
+- Graceful degradation
+
+## Project Setup
 
 ```bash
+# Install dependencies
 $ npm install
+
+# Configure environment variables
+$ cp .env.example .env
 ```
 
-## Compile and run the project
+Required environment variables:
+- Traffic API credentials
+- OpenAI API key
+- Notification service credentials
+- Temporal configuration
+
+## Development
 
 ```bash
 # development
@@ -44,7 +98,7 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
-## Run tests
+## Testing
 
 ```bash
 # unit tests
@@ -56,6 +110,44 @@ $ npm run test:e2e
 # test coverage
 $ npm run test:cov
 ```
+
+## Project Structure
+
+```
+src/
+├── workflows/          # Temporal workflow definitions
+├── activities/         # Workflow activities
+├── services/          # Business logic services
+├── interfaces/        # TypeScript interfaces
+├── config/           # Configuration files
+└── utils/            # Utility functions
+```
+
+## Error Handling Strategy
+
+The system implements a comprehensive error handling strategy:
+- API response validation
+- Retry mechanisms for transient failures
+- Fallback messages for AI generation failures
+- Detailed error logging
+- Graceful degradation paths
+
+## Documentation
+
+Each component includes detailed documentation:
+- Purpose and functionality
+- Required parameters
+- Error scenarios
+- Integration points
+- Configuration options
+
+## Support
+
+For support and questions, please open an issue in the repository.
+
+## License
+
+This project is [MIT licensed](LICENSE).
 
 ## Deployment
 
@@ -83,16 +175,8 @@ Check out a few resources that may come in handy when working with NestJS:
 - To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
 - Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
 
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
 ## Stay in touch
 
 - Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
 - Website - [https://nestjs.com](https://nestjs.com/)
 - Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
